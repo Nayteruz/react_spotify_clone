@@ -1,11 +1,7 @@
 import React from 'react';
 
-const PlaylistDescription = ({children:text}) => {
-	return (
-		<p className="text-sm text-[#b3b3b3] line-clamp-2">
-			{text}
-		</p>
-	);
+const PlaylistDescription = ({description}) => {
+	return <p className="text-sm text-[#b3b3b3] line-clamp-2">{description}</p>;
 };
 
 export default PlaylistDescription;

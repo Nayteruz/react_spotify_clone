@@ -7,11 +7,11 @@ const PlaylistContextMenuItem = ({children: label, submenu}) => {
 	return (
 		<li className={submenu && 'relative'}>
 			<button
-				className={`w-full p-3 text-left hover:text-white hover:bg-[#3e3e3e] cursor-default ${submenu ? 'flex justify-between items-center' : ''}`}>
+				className={`w-full p-3 text-left hover:text-white hover:bg-[#3e3e3e] cursor-default ${submenu ? 'flex justify-between items-center peer' : ''}`}>
 				{label} {submenu && <ChevronRightIcon className="h-4 w-4"/>}
 			</button>
 			{submenu && <PlaylistContextMenu
-				classes="absolute top-0 left-full bg-[#282828] text-[#eaeaea] text-sm p-1 rounded shadow-xl cursor-default"
+				classes="absolute top-0 left-full bg-[#282828] text-[#eaeaea] text-sm p-1 rounded shadow-xl cursor-default invisible peer-hover:visible hover:visible"
 				menuItems={submenu}/>}
 		</li>
 	);
