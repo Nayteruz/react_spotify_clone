@@ -58,7 +58,7 @@ const playLists = [
 	},
 ];
 
-const TheMain = () => {
+const TheMain = ({toggleScrolling}) => {
 	return (
 		<main className="text-white relative">
 			<div className="h-[275px] bg-gradient-to-b from-[#1f1f1f] to-[#121212] absolute w-full"></div>
@@ -77,7 +77,11 @@ const TheMain = () => {
 
 					<div className="grid sm:grid-cols-playlists-mobile md:grid-cols-playlists-tablet lg:grid-cols-playlists-desktop gap-5">
 						{playLists.map(playlist =>
-							<Playlist key={playlist.title} {...playlist}/>
+							<Playlist
+								key={playlist.title}
+								{...playlist}
+								toggleScrolling={toggleScrolling}
+							/>
 						)}
 					</div>
 				</div>
