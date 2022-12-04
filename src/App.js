@@ -31,7 +31,7 @@ function App() {
 
 	return (
 		<>
-			<div className="flex flex-grow overflow-auto">
+			<div className="flex grow overflow-auto">
 				<TheSideBar/>
 				<TheSideBarOverlay/>
 				<div className="flex-1 overflow-auto" ref={contentWrapperRef}>
