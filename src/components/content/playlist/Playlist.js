@@ -6,58 +6,65 @@ import PlaylistDescription from "./PlaylistDescription";
 import PlaylistContextMenu from "../contextMenu/PlaylistContextMenu";
 import useMenu from "../../../hooks/useContextMenu";
 
-function generateMenuItems(isAlternate = false) {
-	return [
-		{
-			label: 'Add to Your Library'
-		},
-		{
-			label: 'Share',
-			submenu: [
-				{
-					label: isAlternate ? 'Copy Spotify URI' : 'Copy link to playlist',
-					classes: 'min-w-[150px]',
-				},
-				{
-					label: 'Embed playlist'
-				},
-			]
-		},
-		{
-			label: 'About recommendations'
-		},
-		{
-			label: 'Open in Desktop app'
-		},
-	]
-}
-
-const Playlist = ({classes, coverUrl, title, description, toggleScrolling}) => {
+const Playlist = ({classes, coverUrl, title, description, toggleScrolling, showToast}) => {
 
 	const [menuItems, setMenuItems] = useState(generateMenuItems)
 	const menu = useMenu(menuItems);
 
 	useLayoutEffect(() => toggleScrolling(!menu.isOpen))
 
-	useEffect(() => {
-		if (!menu.isOpen) return;
+	function generateMenuItems(isAlternate = false) {
+		return [
+			{
+				label: 'Add to Your Library'
+			},
+			{
+				label: 'Share',
+				submenu: [
+					{
+						label: isAlternate ? 'Copy Spotify URI' : 'Copy link to playlist',
+						classes: 'min-w-[150px]',
+						action: () => {
+							navigator.clipboard.writeText(title).then(() => {
+								menu.close();
+								showToast('Link copied to clipboard');
+							})
+						},
+					},
+					{
+						label: 'Embed playlist'
+					},
+				]
+			},
+			{
+				label: 'About recommendations'
+			},
+			{
+				label: 'Open in Desktop app'
+			},
+		]
+	}
 
-		function handleAltKeyDown({key}) {
+	useEffect(() => {
+		if (!menu?.isOpen) return;
+
+		function handleAltKeydown({key}) {
 			if (key === 'Alt') setMenuItems(generateMenuItems(true));
 		}
 
-		function handleAltKeyUp({key}) {
+		function handleAltKeyup({key}) {
 			if (key === 'Alt') setMenuItems(generateMenuItems());
 		}
 
-		document.addEventListener('keydown', handleAltKeyDown);
-		document.addEventListener('keyup', handleAltKeyUp);
-
+		document.addEventListener('keydown', handleAltKeydown);
+		document.addEventListener('keyup', handleAltKeyup);
 		return () => {
-			document.removeEventListener('keydown', handleAltKeyDown);
-			document.removeEventListener('keyup', handleAltKeyUp);
-		}
-	})
+			document.removeEventListener('keydown', handleAltKeydown);
+			document.removeEventListener('keyup', handleAltKeyup);
+		};
+	});
+
+
 
 	const bgClasses = menu.isOpen
 		? 'bg-[#272727]'

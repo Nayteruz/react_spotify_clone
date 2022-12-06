@@ -15,16 +15,16 @@ const PlaylistContextMenu = ({classes, menuItems}, ref) => {
 			className={`bg-[#282828] text-[#eaeaea] text-sm p-1 rounded shadow-3xl cursor-default whitespace-nowrap z-10 ${classes}`}
 			ref={ref}
 		>
-			{menuItems.map(({label, submenu, classes:menuItemClasses}) => {
+			{menuItems.map(({label, action, submenu, classes:menuItemClasses}) => {
 				if (submenu) {
 					return (
-						<PlaylistContextMenuItemWithSubMenu key={label} submenu={submenu} onMouseEnter={closePreviousSubMenuIfOpen}>
+						<PlaylistContextMenuItemWithSubMenu key={label} submenuItems={submenu} onMouseEnter={closePreviousSubMenuIfOpen}>
 							{label}
 						</PlaylistContextMenuItemWithSubMenu>
 					)
 				} else {
 					return (
-						<PlaylistContextMenuItem key={label} classes={menuItemClasses} onMouseEnter={closePreviousSubMenuIfOpen}>
+						<PlaylistContextMenuItem key={label} onClick={action} classes={menuItemClasses} onMouseEnter={closePreviousSubMenuIfOpen}>
 							{label}
 						</PlaylistContextMenuItem>
 					)

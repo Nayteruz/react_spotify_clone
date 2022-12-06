@@ -3,14 +3,16 @@ import TheHeader from "./components/header/TheHeader";
 import TheMain from "./components/content/TheMain";
 import TheRegistration from "./components/register/TheRegistration";
 import TheSideBarOverlay from "./components/sidebar/TheSideBarOverlay";
-import {useEffect, useRef} from "react";
+import React, {useEffect, useRef} from "react";
+import BaseToast from "./components/BaseToast";
 
 function App() {
 
+	const toastRef = useRef();
 	const contentWrapperRef = useRef(null);
 	let isScrollingEnabled = true;
 
-	const toggleScrolling = (isEnabled) =>{
+	const toggleScrolling = (isEnabled) => {
 		isScrollingEnabled = isEnabled;
 	}
 
@@ -21,7 +23,11 @@ function App() {
 		e.stopPropagation();
 	}
 
-	useEffect(()=>{
+	function showToast(message) {
+		toastRef.current?.show(message);
+	}
+
+	useEffect(() => {
 		const contentWrapper = contentWrapperRef.current;
 
 		contentWrapper.addEventListener('mousewheel', handleScrolling)
@@ -36,10 +42,11 @@ function App() {
 				<TheSideBarOverlay/>
 				<div className="flex-1 overflow-auto" ref={contentWrapperRef}>
 					<TheHeader/>
-					<TheMain toggleScrolling={toggleScrolling}/>
+					<TheMain showToast={showToast} toggleScrolling={toggleScrolling}/>
 				</div>
 			</div>
 			<TheRegistration/>
+			<BaseToast ref={toastRef}/>
 		</>
 	);
 }
