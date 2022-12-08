@@ -1,7 +1,6 @@
 import React from 'react';
 import {ChevronLeftIcon, ChevronRightIcon, Bars3Icon} from "@heroicons/react/24/outline";
-import TheButtonLogin from "./TheButtonLogin";
-import TheButtonRegistration from "./TheButtonRegistration";
+import BaseButton from "../base/BaseButton";
 
 const TheHeader = () => {
 	return (
@@ -19,8 +18,8 @@ const TheHeader = () => {
 				</a>
 			</div>
 			<div>
-				<TheButtonRegistration/>
-				<TheButtonLogin/>
+				<BaseButton extraClasses="text-gray-400 hover:text-white">Sign up</BaseButton>
+				<BaseButton extraClasses="bg-white hover:bg-gray-100 text-[#2e2e2e]">Log in</BaseButton>
 			</div>
 		</header>
 	);

@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
+import useSubmenu from "../../../hooks/useContextSubmenu";
 import {ChevronRightIcon} from "@heroicons/react/24/outline";
 import PlaylistContextMenu from "./PlaylistContextMenu";
-import useSubmenu from "../../../hooks/useContextSubmenu";
 
 const PlaylistContextMenuItemWithSubMenu = ({
         children: label,
