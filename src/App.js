@@ -33,8 +33,8 @@ function App() {
 		e.stopPropagation();
 	}
 
-	function showPopover(title, description, target) {
-		popoverRef.current?.show(title, description, target);
+	function showPopover(title, description, target, offset) {
+		popoverRef.current?.show(title, description, target, offset);
 	}
 
 	function showToast(message) {
@@ -50,7 +50,7 @@ function App() {
 				<TheSideBarOverlay/>
 				<div className="flex-1 overflow-auto" ref={contentWrapperRef}>
 					<TheHeader/>
-					<TheMain showToast={showToast} showPopover={showPopover} toggleScrolling={toggleScrolling}/>
+					<TheMain showToast={showToast} toggleScrolling={toggleScrolling}/>
 				</div>
 			</div>
 			<TheRegistration/>

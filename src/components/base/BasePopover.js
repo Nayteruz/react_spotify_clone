@@ -1,46 +1,97 @@
 import {forwardRef, useEffect, useImperativeHandle, useRef, useState} from 'react';
+import {debounce, MIN_DESKTOP_WIDTH} from "../../utils/utils";
 import BaseButton from "./BaseButton";
+import BasePopoverTriangle from "./BasePopoverTriangle";
+
+function isCurrentWindowWidthSmall() {
+	return window.innerWidth < MIN_DESKTOP_WIDTH;
+}
+
+function isCurrentWindowWidthBig() {
+	return window.innerWidth >= MIN_DESKTOP_WIDTH;
+}
 
 const BasePopover = (_, ref) => {
 
-	const HIDDEN_CLASSES = 'opacity-0 translate-x-1 pointer-events-none';
-	const [classes, setClasses] = useState(HIDDEN_CLASSES);
+	const [isSmallScreen, setIsSmallScreen] = useState(isCurrentWindowWidthSmall);
+	const [classes, setClasses] = useState(getHiddenClasses);
+	const [target, setTarget] = useState('');
 	const [title, setTitle] = useState('');
 	const [desc, setDesc] = useState('');
 	const nodeRef = useRef();
+	const changeWidthTimer = useRef();
 
-	const show = (title, description, target) => {
-		moveTo(target);
+	const show = (title, description, nextTarget, offset) => {
+		if (target === nextTarget) return;
+		moveTo(offset ? offset : calculateTargetOffset(nextTarget));
+		setTarget(nextTarget);
 		setTitle(title);
 		setDesc(description);
 		setClasses('');
 	}
 
 	const hide = () => {
-		setClasses(HIDDEN_CLASSES);
+		setTarget(null);
+		setClasses(getHiddenClasses);
 	}
 
-	const moveTo = (target) => {
-		//nodeRef
-		console.dir(target);
-		const {top, right, height} = target.getBoundingClientRect();
-		nodeRef.current.style.left = `${right}px`;
+	const moveTo = ({top, left}) => {
 		nodeRef.current.style.top = `${top}px`;
+		nodeRef.current.style.left = `${left}px`;
+	}
+
+	const calculateTargetOffset = (target) => {
+		const {top, left, right, height} = target.getBoundingClientRect();
+		return {
+			top: isSmallScreen ? top + height * 2 : top - height * 0.66,
+			left: isSmallScreen ? left : right + 30
+		}
+	}
+
+	const screenHasBecameSmall = () => {
+		return isCurrentWindowWidthSmall() && !isSmallScreen;
+	}
+
+	const screenHasBecameBig = () => {
+		return isCurrentWindowWidthBig() && isSmallScreen;
+	}
+
+	function getHiddenClasses() {
+		const translateClass = isSmallScreen ? 'translate-y-1' : 'translate-x-1'
+		return `opacity-0 ${translateClass} pointer-events-none`;
 	}
 
 	useEffect(() => {
+		function handleResize() {
+			if (!screenHasBecameSmall() && !screenHasBecameBig()) return;
+			hide();
+			clearTimeout(changeWidthTimer.current);
+			changeWidthTimer.current = setTimeout(
+				() => setIsSmallScreen(isCurrentWindowWidthSmall),
+				300
+			)
 
-		function handleClickAway({target}) {
-			if (!nodeRef.current?.contains(target)) hide();
 		}
+
+		function handleClickAway(event) {
+			if (target && target.parentNode.contains(event.target)) return;
+
+			if (target && !nodeRef.current?.contains(event.target)) hide();
+		}
+
+		const debounceResize = debounce.bind(null, handleResize, 300);
+
+		window.addEventListener('resize', debounceResize)
 		document.addEventListener('mousedown', handleClickAway)
 
-		return () => document.removeEventListener('mousedown', handleClickAway)
+		return () => {
+			window.removeEventListener('resize', debounceResize)
+			document.removeEventListener('mousedown', handleClickAway)
+		}
 
 	})
 
-	useImperativeHandle(ref, () => ({ show }));
-
+	useImperativeHandle(ref, () => ({show}));
 
 	return (
 		<div ref={nodeRef}
@@ -51,10 +102,7 @@ const BasePopover = (_, ref) => {
 				<BaseButton extraClasses="text-white" onClick={hide}>Not now</BaseButton>
 				<BaseButton extraClasses="bg-white text-[#2e2e2e]">Log in</BaseButton>
 			</div>
-			<div
-				className="w-10 h-20 absolute -top-4 -left-10 flex items-center justify-end overflow-hidden pointer-events-none">
-				<div className="w-3 h-3 bg-[#0e72ea]  shadow-3xl translate-x-1/2 rotate-45 pointer-events-auto"></div>
-			</div>
+			<BasePopoverTriangle side={isSmallScreen ? 'top' : 'left'}/>
 		</div>
 	);
 };

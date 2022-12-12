@@ -6,7 +6,7 @@ import PlaylistTitle from "./PlaylistTitle";
 import PlaylistDescription from "./PlaylistDescription";
 import PlaylistContextMenu from "../contextMenu/PlaylistContextMenu";
 
-const Playlist = ({classes, coverUrl, title, description, toggleScrolling, showToast, showPopover}) => {
+const Playlist = ({classes, coverUrl, title, description, toggleScrolling, showToast}) => {
 
 	const [menuItems, setMenuItems] = useState(generateMenuItems)
 	const menu = useMenu(menuItems);
@@ -19,7 +19,7 @@ const Playlist = ({classes, coverUrl, title, description, toggleScrolling, showT
 				label: 'Add to Your Library',
 				action: () => {
 					menu.close();
-					showPopover();
+					document.querySelector('nav a:nth-child(4)').click();
 				}
 			},
 			{
@@ -67,7 +67,6 @@ const Playlist = ({classes, coverUrl, title, description, toggleScrolling, showT
 			document.removeEventListener('keyup', handleAltKeyup);
 		};
 	});
-
 
 
 	const bgClasses = menu.isOpen

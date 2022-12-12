@@ -1,6 +1,7 @@
 import React from 'react';
 import {HomeIcon, MagnifyingGlassIcon, ViewColumnsIcon, PlusCircleIcon, HeartIcon} from '@heroicons/react/24/outline'
 import NavItem from "./NavItem";
+import {MIN_DESKTOP_WIDTH} from "../../utils/utils";
 
 const TheNav = ({showPopover}) => {
 
@@ -39,7 +40,17 @@ const TheNav = ({showPopover}) => {
 			classes: navItemClasses,
 			icon: <HeartIcon className="w-6 h-6"/>,
 			action: (target) => {
-				showPopover('Enjoy your Liked Songs', "Log in to see all the songs you've liked in one easy playlists.", target)
+				let offset = null;
+
+				if (window.innerWidth > MIN_DESKTOP_WIDTH) {
+					const {top, right, height} = target.getBoundingClientRect();
+					offset = {
+						top: top - height * 0.66,
+						left: right + 130
+					};
+				}
+
+				showPopover('Enjoy your Liked Songs', "Log in to see all the songs you've liked in one easy playlists.", target, offset)
 			}
 		},
 	];
@@ -47,7 +58,7 @@ const TheNav = ({showPopover}) => {
 	return (
 		<nav>
 			{navItems.map(({label, icon, classes, action}) =>
-				<NavItem key={label} classes={classes} icon={icon} onClick={action} >
+				<NavItem key={label} classes={classes} icon={icon} onClick={action}>
 					{label}
 				</NavItem>
 			)}
