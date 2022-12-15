@@ -1,11 +1,13 @@
 import {useEffect, useRef, useState} from "react";
 import usePosition from "./useContextMenuPosition";
+import useClickAway from "./useClickAway";
 
 function useContextMenu(items) {
 	const ref = useRef(null);
 	const [isOpen, setIsOpen] = useState(false);
-
 	const move = usePosition(ref, isOpen);
+
+	useClickAway(ref, close, () => isOpen);
 
 	useEffect(() => {
 		if (!isOpen) return;
@@ -26,12 +28,13 @@ function useContextMenu(items) {
 		}
 	})
 
-	const open = (e) => {
+	function open(e){
 		e.preventDefault();
 		move(e.clientX, e.clientY);
 		setIsOpen(true);
 	}
-	const close = () => {
+
+	function close() {
 		setIsOpen(false)
 	}
 

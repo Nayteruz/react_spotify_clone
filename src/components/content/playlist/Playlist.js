@@ -6,7 +6,7 @@ import PlaylistTitle from "./PlaylistTitle";
 import PlaylistDescription from "./PlaylistDescription";
 import PlaylistContextMenu from "../contextMenu/PlaylistContextMenu";
 
-const Playlist = ({classes, coverUrl, title, description, toggleScrolling, showToast}) => {
+const Playlist = ({classes, coverUrl, title, description, toggleScrolling, showToast, openModal}) => {
 
 	const [menuItems, setMenuItems] = useState(generateMenuItems)
 	const menu = useMenu(menuItems);
@@ -41,7 +41,11 @@ const Playlist = ({classes, coverUrl, title, description, toggleScrolling, showT
 				]
 			},
 			{
-				label: 'About recommendations'
+				label: 'About recommendations',
+				action: () => {
+					menu.close();
+					openModal();
+				},
 			},
 			{
 				label: 'Open in Desktop app'

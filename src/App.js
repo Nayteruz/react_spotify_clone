@@ -3,15 +3,17 @@ import TheHeader from "./components/header/TheHeader";
 import TheMain from "./components/content/TheMain";
 import TheRegistration from "./components/register/TheRegistration";
 import TheSideBarOverlay from "./components/sidebar/TheSideBarOverlay";
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import BaseToast from "./components/base/BaseToast";
 import BasePopover from "./components/base/BasePopover";
+import BaseModal from "./components/base/BaseModal";
 
 function App() {
 
 	const contentWrapperRef = useRef();
 	const toastRef = useRef();
 	const popoverRef = useRef();
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	let isScrollingEnabled = true;
 
 	useEffect(() => {
@@ -41,6 +43,13 @@ function App() {
 		toastRef.current?.show(message);
 	}
 
+	function openModal() {
+		setIsModalOpen(true)
+	}
+
+	function closeModal() {
+		setIsModalOpen(false);
+	}
 
 
 	return (
@@ -50,12 +59,17 @@ function App() {
 				<TheSideBarOverlay/>
 				<div className="flex-1 overflow-auto" ref={contentWrapperRef}>
 					<TheHeader/>
-					<TheMain showToast={showToast} toggleScrolling={toggleScrolling}/>
+					<TheMain
+						showToast={showToast}
+						toggleScrolling={toggleScrolling}
+						openModal={openModal}
+					/>
 				</div>
 			</div>
 			<TheRegistration/>
 			<BaseToast ref={toastRef}/>
 			<BasePopover ref={popoverRef}/>
+			{isModalOpen && <BaseModal onClose={closeModal}/>}
 		</>
 	);
 }
