@@ -1,10 +1,11 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import useMenu from "../../../hooks/useContextMenu";
 import PlaylistCover from "./PlaylistCover";
 import PlaylistButtonPlay from "./PlaylistButtonPlay";
 import PlaylistTitle from "./PlaylistTitle";
 import PlaylistDescription from "./PlaylistDescription";
 import PlaylistContextMenu from "../contextMenu/PlaylistContextMenu";
+import useEvent from "../../../hooks/useEvent";
 
 const Playlist = ({classes, coverUrl, title, description, toggleScrolling, showToast, openModal}) => {
 
@@ -53,25 +54,16 @@ const Playlist = ({classes, coverUrl, title, description, toggleScrolling, showT
 		]
 	}
 
-	useEffect(() => {
-		if (!menu?.isOpen) return;
+	useEvent('keydown', handleAltKeydown, () => menu?.isOpen)
+	useEvent('keyup', handleAltKeyup, () => menu?.isOpen)
 
-		function handleAltKeydown({key}) {
-			if (key === 'Alt') setMenuItems(generateMenuItems(true));
-		}
+	function handleAltKeydown({key}) {
+		if (key === 'Alt') setMenuItems(generateMenuItems(true));
+	}
 
-		function handleAltKeyup({key}) {
-			if (key === 'Alt') setMenuItems(generateMenuItems());
-		}
-
-		document.addEventListener('keydown', handleAltKeydown);
-		document.addEventListener('keyup', handleAltKeyup);
-		return () => {
-			document.removeEventListener('keydown', handleAltKeydown);
-			document.removeEventListener('keyup', handleAltKeyup);
-		};
-	});
-
+	function handleAltKeyup({key}) {
+		if (key === 'Alt') setMenuItems(generateMenuItems());
+	}
 
 	const bgClasses = menu.isOpen
 		? 'bg-[#272727]'

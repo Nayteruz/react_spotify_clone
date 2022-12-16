@@ -69,7 +69,7 @@ function App() {
 			<TheRegistration/>
 			<BaseToast ref={toastRef}/>
 			<BasePopover ref={popoverRef}/>
-			{isModalOpen && <BaseModal onClose={closeModal}/>}
+			{isModalOpen && <BaseModal onClose={closeModal} duration={400} />}
 		</>
 	);
 }
